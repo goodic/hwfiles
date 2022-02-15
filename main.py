@@ -1,16 +1,30 @@
-# This is a sample Python script.
+def ingredient_to_dict(ingredient):
+    ingredient_list = ingredient.split("|")
+    return {'ingredient_name': str(ingredient_list[0]), 'quantity': int(ingredient_list[1]), 'measure': str(ingredient_list[2][:-1])}
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+def make_dish(file):
+    dish_name = file.readline()[:-1]
+    if len(dish_name) == 0:
+        return None
+    ingredient_quant = int(file.readline())
+    ingredient_list = []
+    while ingredient_quant > 0:
+        ingredient = file.readline()
+        ingredient = ingredient_to_dict(ingredient)
+        ingredient_list.append(ingredient)
+        ingredient_quant -= 1
+    devnull = file.readline() #буду рад узнать как удалять пустую строку правильно
+    return {'name': dish_name, 'ingredients': ingredient_list}
 
+def make_book(path):
+    book = {}
+    f = open(path, encoding="utf-8")
+    while 1:
+        dish = make_dish(f)
+        if dish == None:
+            return book
+        book[dish['name']]=dish['ingredients']
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+path = "files/recipes.txt"
+cook_book = make_book(path)
+print(cook_book)
