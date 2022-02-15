@@ -25,6 +25,7 @@ def make_book(path):
     while 1:
         dish = make_dish(f)
         if dish == None:
+            f.close()
             return book
         book[dish['name']]=dish['ingredients']
 
