@@ -1,5 +1,8 @@
+cook_book = {}
+path = 'files/recipes.txt'
+
 def ingredient_to_dict(ingredient):
-    ingredient_list = ingredient.split("|")
+    ingredient_list = ingredient.split(" | ")
     return {'ingredient_name': str(ingredient_list[0]), 'quantity': int(ingredient_list[1]), 'measure': str(ingredient_list[2][:-1])}
 
 def make_dish(file):
@@ -25,6 +28,25 @@ def make_book(path):
             return book
         book[dish['name']]=dish['ingredients']
 
-path = "files/recipes.txt"
+def get_shop_list_by_dishes(dishes, person_count):
+    global cook_book
+    ingredient_shop_list = {}
+    for dish in dishes:
+        if dish not in cook_book.keys():
+            print("Ошибка")
+            return
+        for ingredient in cook_book[dish]:
+            if ingredient['ingredient_name'] in ingredient_shop_list.keys():
+                old_quantity = ingredient_shop_list[ingredient['ingredient_name']]['quantity']
+                ingredient_shop_atr = {'measure': ingredient['measure'],'quantity': ingredient['quantity'] * person_count + old_quantity}
+                ingredient_shop_list.update({ingredient['ingredient_name']: ingredient_shop_atr})
+            else:
+                ingredient_shop_atr = {'measure': ingredient['measure'], 'quantity': ingredient['quantity'] * person_count}
+                ingredient_shop_list.update({ingredient['ingredient_name']:ingredient_shop_atr})
+    return ingredient_shop_list
+
+
 cook_book = make_book(path)
 print(cook_book)
+
+print(get_shop_list_by_dishes(['Запеченный картофель', 'Омлет','Фахитос'], 3))
